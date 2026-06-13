@@ -1,0 +1,111 @@
+{
+  "name": "CloudCat",
+  "artboard": "CloudCat",
+  "stateMachine": "CloudCatMachine",
+  "description": "Authoring contract for the CloudCat Rive file. Export the real binary file as cloudcat_state_machine.riv in this folder.",
+  "inputs": {
+    "state": {
+      "type": "number",
+      "description": "0 idle, 1 listen, 2 low, 3 hug, 4 tearing, 5 happy"
+    },
+    "emotion": {
+      "type": "number",
+      "description": "0 neutral, 1 tired, 2 anxious, 3 wronged, 4 annoyed, 5 happy"
+    },
+    "pointerX": {
+      "type": "number",
+      "description": "Normalized pointer direction from -1 to 1"
+    },
+    "pointerY": {
+      "type": "number",
+      "description": "Normalized pointer direction from -1 to 1"
+    },
+    "isPetting": {
+      "type": "boolean",
+      "description": "True while the user is tapping or pressing the cat"
+    },
+    "listen": {
+      "type": "trigger",
+      "description": "Fire when the cat starts listening"
+    },
+    "tear": {
+      "type": "trigger",
+      "description": "Fire when the cat starts tearing the emotion canvas"
+    },
+    "discover": {
+      "type": "trigger",
+      "description": "Fire when the hidden happiness layer is discovered"
+    },
+    "pet": {
+      "type": "trigger",
+      "description": "Fire when the user pets the cat"
+    },
+    "sparkle": {
+      "type": "trigger",
+      "description": "Fire for small light feedback"
+    }
+  },
+  "stateValues": {
+    "idle": 0,
+    "listen": 1,
+    "low": 2,
+    "hug": 3,
+    "tearing": 4,
+    "happy": 5
+  },
+  "emotionValues": {
+    "neutral": 0,
+    "tired": 1,
+    "anxious": 2,
+    "wronged": 3,
+    "annoyed": 4,
+    "happy": 5
+  },
+  "recommendedAnimations": [
+    {
+      "name": "IdleFloat",
+      "state": "idle",
+      "notes": "Slow breathing, tail/ear micro movement, soft blink."
+    },
+    {
+      "name": "ListenNod",
+      "state": "listen",
+      "notes": "Head leans forward, ears attentive, small listening glow."
+    },
+    {
+      "name": "LowBreath",
+      "state": "low",
+      "notes": "Lower posture, slower breathing, dimmer aura."
+    },
+    {
+      "name": "HugPulse",
+      "state": "hug",
+      "notes": "Warm protective pulse, body curls inward."
+    },
+    {
+      "name": "TearCanvas",
+      "state": "tearing",
+      "notes": "Paw pulling motion and stronger body effort."
+    },
+    {
+      "name": "HappyBounce",
+      "state": "happy",
+      "notes": "Small bounce, bright eyes, celebratory sparkle."
+    },
+    {
+      "name": "PetReact",
+      "trigger": "pet",
+      "notes": "Quick squash/stretch and pleased blink."
+    },
+    {
+      "name": "DiscoverLight",
+      "trigger": "discover",
+      "notes": "Bright reveal pulse when happiness is found."
+    }
+  ],
+  "jsIntegration": {
+    "runtimeCdn": "https://unpkg.com/@rive-app/canvas@2.24.0/rive.js",
+    "expectedBinaryPath": "./assets/rive/cloudcat_state_machine.riv",
+    "fallback": "If the binary .riv is missing or cannot load, the page keeps using the existing PNG/CSS pet actor."
+  }
+}
