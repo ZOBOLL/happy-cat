@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>开心猫 Demo</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div class="badge">Hackathon MVP Demo</div>
+      <h1>开心猫</h1>
+      <p>开心猫不是催你开心，而是陪你轻轻撕开心情画布，看见今天藏在下面的一点小幸福。</p>
+    </header>
+
+    <main class="shell">
+      <section class="pet-panel" id="petPanel" data-pet-state="idle">
+        <div class="pet-glow"></div>
+        <div class="pet-shadow"></div>
+        <div class="pet-stage" aria-hidden="true">
+          <div class="pet-aura"></div>
+          <div class="pet-ambient"></div>
+          <div class="pet-ground-glow"></div>
+          <div class="pet-sparkles" id="petSparkles"></div>
+          <canvas id="rivePetCanvas" class="rive-pet-canvas" width="540" height="540"></canvas>
+          <img id="petImage" class="pet" src="./assets/pet_cutouts/cat_idle.png" alt="云光猫" />
+        </div>
+        <div class="pet-bubble" id="petBubble">我在这里。今天不用很努力，画一笔也可以。</div>
+        <button class="sound-toggle" id="soundToggleBtn" type="button" aria-pressed="true">猫猫音效：开</button>
+      </section>
+
+      <section class="card input-card" id="inputCard">
+        <h2>今天想让猫猫接住什么？</h2>
+        <textarea id="userText" placeholder="写一句就好，比如：我今天很累，但又停不下来。"></textarea>
+        <div class="quick-row">
+          <button data-example="我今天很累，但又停不下来。">疲惫</button>
+          <button data-example="我脑子很乱，担心很多事。">焦虑</button>
+          <button data-example="我有点委屈，想哭但又说不出来。">委屈</button>
+          <button data-example="我今天很烦，不想听别人说话。">烦躁</button>
+          <button data-example="今天收到一个好消息，有一点开心。">开心</button>
+        </div>
+        <p class="form-hint" id="inputHint" aria-live="polite"></p>
+        <button class="primary" id="analyzeBtn" data-default-text>让猫猫听听</button>
+      </section>
+
+      <section class="card safety-card hidden" id="safetyCard" aria-live="polite">
+        <div class="section-title danger">
+          <span>Safety</span>
+          <h2>猫猫先不撕开画布</h2>
+        </div>
+        <p>我听见你现在可能很危险。你不用一个人扛着，请立刻联系身边可信任的人，或者联系当地紧急救助资源。如果你已经处在危险中，请马上拨打当地紧急电话。</p>
+        <button class="primary" id="safetyOkBtn" data-default-text>我知道了</button>
+      </section>
+
+      <section class="card result-card hidden" id="mouthpieceCard">
+        <div class="section-title">
+          <span>Skill 1</span>
+          <h2>猫猫读心嘴替</h2>
+        </div>
+        <div class="emotion-pill">猫猫听见：<strong id="emotionTag">疲惫</strong></div>
+        <div class="info-grid">
+          <div class="info-block">
+            <label>猫猫听见的情绪</label>
+            <p id="surfaceEmotion"></p>
+          </div>
+          <div class="info-block">
+            <label>猫猫读到的潜台词</label>
+            <p id="subtext"></p>
+          </div>
+          <div class="info-block wide">
+            <label>猫猫嘴替</label>
+            <p id="mouthpiece"></p>
+          </div>
+          <div class="info-block wide">
+            <label>猫猫回应</label>
+            <p id="petResponse"></p>
+          </div>
+        </div>
+        <button class="primary" id="goTearBtn" data-default-text>让猫猫撕开心情画布</button>
+      </section>
+
+      <section class="card tear-card hidden" id="tearCard">
+        <div class="section-title">
+          <span>Skill 2</span>
+          <h2>撕开心情画布</h2>
+        </div>
+
+        <div class="canvas-stage" id="canvasStage">
+          <img id="happinessLayer" class="layer bottom" src="" alt="幸福底层" />
+          <img id="emotionLayer" class="layer top" src="" alt="情绪画布表层" />
+          <div class="tear-light" id="tearLight"></div>
+          <img id="strokeLayer" class="layer stroke hidden" src="" alt="猫猫接笔" />
+          <img id="tearPet" class="tear-pet" src="./assets/pet_cutouts/cat_tearing.png" alt="云光猫撕开心情画布" />
+        </div>
+
+        <div class="tear-copy">
+          <p id="canvasName"></p>
+          <p id="canvasVisual"></p>
+          <p id="tearAction"></p>
+        </div>
+
+        <button class="primary" id="tearBtn" data-default-text>让猫猫轻轻撕开</button>
+      </section>
+
+      <section class="card final-card hidden" id="finalCard">
+        <div class="section-title">
+          <span>Today</span>
+          <h2>今日小幸福卡</h2>
+        </div>
+
+        <div class="share-card" id="shareCard">
+          <img class="card-bg" src="./assets/card_templates/card_bg_soft.png" alt="" />
+          <div class="share-art">
+            <img id="cardImage" src="" alt="幸福画面" />
+            <img id="cardStroke" src="" alt="接笔" />
+            <img class="card-cat" src="./assets/pet_cutouts/cat_happy.png" alt="云光猫" />
+          </div>
+          <div class="share-text">
+            <h3 id="cardTitle"></h3>
+            <p><b>猫猫发现：</b><span id="catDiscovery"></span></p>
+            <p><b>今日小幸福：</b><span id="todayHappiness"></span></p>
+            <p><b>猫猫接笔：</b><span id="catStrokeText"></span></p>
+            <p class="share-line" id="shareLine"></p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="secondary" id="startOverBtn" data-default-text>再听一句</button>
+          <button class="secondary" id="saveGalleryBtn" data-default-text>保存到幸福画廊</button>
+          <button class="primary" id="downloadBtn" data-default-text>下载幸福卡 PNG</button>
+        </div>
+        <p class="form-hint success" id="saveHint" aria-live="polite"></p>
+      </section>
+
+      <section class="card gallery-card" id="galleryCard">
+        <div class="section-head">
+          <div class="section-title">
+            <span>Gallery</span>
+            <h2>我的幸福画廊</h2>
+          </div>
+          <button class="ghost" id="clearGalleryBtn" type="button">清空画廊</button>
+        </div>
+        <div id="gallery" class="gallery-empty">还没有卡片。让云光猫帮你撕开今天的一点光吧。</div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
